@@ -1,0 +1,2 @@
+# DNA-sequencer
+The goal of our project is to piece together the short pieces of DNA that are cut during the DNA sequencing process in order to read in a whole sequence. To do this we will solve the shortest common superstring problem by constructing the De Bruijn graph and the Eulerian algorithm for genome assembly. The scope of our project will span the coding implementation of graph construction and edge traversal to find the ultimate sequence.
