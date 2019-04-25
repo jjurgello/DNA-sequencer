@@ -1,14 +1,18 @@
-from igraph import *
+# jennifer steele, jj urgello
+# CS466 final project, DNA sequencer
+
+import igraph
+import sys
 
 ### USAGE
-# python createGraph.py 3
+# python createGraph.py [k, not necessary]
 
 ### FORMATTING THE SEQUENCE
 
 # inputs
-with open('data.txt', 'r') as sequencefile:
-    inputstr = sequencefile.read().replace('\n', '') # input string
-k = int(sys.argv[1]) # k-mer of the reads
+with open('data.txt', 'r') as sequencefile: 
+    inputstr = sequencefile.read().replace('\n', '') # input string 
+k = int(sys.argv[1]) if len(sys.argv) > 1 else 3 # k-mer of the reads
 
 # split the string into reads
 # here, I iterate through the input string by selecting k lengths
@@ -20,24 +24,18 @@ splitReads = [(read[0:k-1], read[1:]) for read in reads]
 # here, I iterate through each pair in splitReads, and a python set prevents repeats
 vertexLabels = list(set([read for pair in splitReads for read in pair]))
 
-# vertexLabels = ["AA", "AB", "BB", "BA"]
-# splitReads = [("AA", "AA"), ("AA", "AB"), ("AB", "BB"), ("BB", "BB"), ("BB", "BA")]
-
-### TESTING (DELETE)
-print(vertexLabels)
-print(splitReads)
-
 ### CREATING THE GRAPH
 
-# g = Graph()
-# g.add_vertices(len(vertexLabels))
-# g.vs["seq"] = vertexLabels
-# for pair in splitReads:
-#     left = g.vs.select(seq_eq = pair[0])     #not sure about the runtime of this - might have to store a deparate map from vertexLabel -> vertexID
-#     right = g.vs.select(seq_eq = pair[1])
-#     g.add_edges(c(left, right))
+# create an igraph
+g = igraph.Graph(1)
+# add the vertex labels
+g.add_vertices(vertexLabels)
+# add the edges, determined by splitReads
+edges = []
+for l, r in splitReads:
+    edges.append((g.vs.find(l), g.vs.find(r)))
+g.add_edges(edges)
 
-g = Graph()
-g.add_vertices(len(vertexLabels))
-g.add_edges([1,2])
+# display the graph
 print(g)
+
