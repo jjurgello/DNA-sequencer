@@ -32,6 +32,7 @@ vertexLabels = list(set([read for pair in splitReads for read in pair]))
 
 # create an igraph
 g = igraph.Graph()
+g.to_directed()
 # add the vertex labels
 g.add_vertices(vertexLabels)
 # add the edges, determined by splitReads
@@ -45,4 +46,42 @@ print(g)
 
 ### SEQUENCING
 
-#
+# Hierholzer's Algorithm to implement to construction of a Eulerian Path
+# reference: https://iampandiyan.blogspot.com/2013/10/c-program-to-find-euler-path-or-euler.html
+
+numEdges = len(splitReads) # count edges
+currVertex = g.vs.find(vertexLabels[0])   # OR find starting vertex - odd outward degree
+breadCrumbs = [] # temporary path, order of verticies visited
+yellowBrickRd = [] # backwards final path
+
+while len(yellowBrickRd) < numEdges:
+    # set currEdge to random non-visited outgoing edge from currVertex
+    neighs = g.neighbors(currVertex, mode=1)
+
+    if len(neighs) is 0: # if there are no more edges to visit
+        # set currVertex to pop from breadCrumbs
+        currVertex = breadCrumbs.pop()
+        # add currVertex to yellowBrickRd
+        yellowBrickRd.append(g.vs[currVertex]['name'])
+    else:
+        # pick a random edge from that list
+        currEdge = g.get_eid(currVertex, neighs[0])
+        currVertex = neighs[0]
+        # add currVertex to breadCrumbs
+        breadCrumbs.append(currVertex)
+        # delete edge from graph
+        g.delete_edges(currEdge)
+
+yellowBrickRd.reverse()
+
+### RESULT
+
+# print the sequence list
+print(yellowBrickRd)
+
+# construct the sequence
+#result = ''
+#for s in yellowBrickRd:
+#J    ''.join(s
+
+print(inputstr)
