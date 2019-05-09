@@ -18,7 +18,7 @@ k = int(sys.argv[1]) if len(sys.argv) > 1 else 3 # k-mer of the reads
 
 # split the string into reads
 # here, I iterate through the input string by selecting k lengths
-reads = [inputstr[i:i+k] for i in range(0, len(inputstr) - k)]
+reads = [inputstr[i:i+k] for i in range(0, len(inputstr) - (k-1))]
 #if len(inputstr) % k != 0:
 #    reads = reads[0:len(reads)-1]
 # list of (k-1)-mer tuples for each read (left/right)
@@ -42,7 +42,6 @@ for l, r in splitReads:
 g.add_edges(edges)
 
 # display the graph
-print(g)
 
 ### SEQUENCING
 
@@ -50,8 +49,8 @@ print(g)
 # reference: https://iampandiyan.blogspot.com/2013/10/c-program-to-find-euler-path-or-euler.html
 
 numEdges = len(splitReads) # count edges
-currVertex = g.vs.find(vertexLabels[0])   # OR find starting vertex - odd outward degree
-breadCrumbs = [] # temporary path, order of verticies visited
+currVertex = g.vs.find(splitReads[0][0])   # OR find starting vertex - odd outward degree
+breadCrumbs = [currVertex] # temporary path, order of verticies visited
 yellowBrickRd = [] # backwards final path
 
 while len(yellowBrickRd) < numEdges:
@@ -72,6 +71,8 @@ while len(yellowBrickRd) < numEdges:
         # delete edge from graph
         g.delete_edges(currEdge)
 
+lastVertex = breadCrumbs.pop()
+yellowBrickRd.append(lastVertex['name'])
 yellowBrickRd.reverse()
 
 ### RESULT
@@ -80,8 +81,11 @@ yellowBrickRd.reverse()
 print(yellowBrickRd)
 
 # construct the sequence
-#result = ''
-#for s in yellowBrickRd:
-#J    ''.join(s
-
+result = yellowBrickRd[0]
+result = result[:-1]
+for vertexStr in yellowBrickRd:
+    result += vertexStr[-1:]
+print(result)
+print(len(result))
 print(inputstr)
+print(len(inputstr))
